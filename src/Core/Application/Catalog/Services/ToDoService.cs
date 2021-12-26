@@ -25,7 +25,7 @@ public class ToDoService : IToDoService
 
     public async Task<Result<Guid>> CreateToDoAsync(CreateToDoRequest request)
     {
-        var ToDo = new ToDo(request.Name, request.IsComplete);
+        var ToDo = new ToDo(request.Name, request.IsComplete, request.Description);
         ToDo.DomainEvents.Add(new StatsChangedEvent());
         var ToDoId = await _repository.CreateAsync(ToDo);
         await _repository.SaveChangesAsync();
@@ -59,7 +59,7 @@ public class ToDoService : IToDoService
     {
         var ToDo = await _repository.GetByIdAsync<ToDo>(id);
         if (ToDo == null) throw new EntityNotFoundException(string.Format(_localizer["ToDo.notfound"], id));
-        var updatedToDo = ToDo.Update(request.Name, request.IsComplete);
+        var updatedToDo = ToDo.Update(request.Name, request.IsComplete, request.Description);
         updatedToDo.DomainEvents.Add(new StatsChangedEvent());
         await _repository.UpdateAsync(updatedToDo);
         await _repository.SaveChangesAsync();
