@@ -1,4 +1,3 @@
-using System.Net;
 using System.Security.Claims;
 using System.Text;
 using DN.WebApi.Application.Common.Interfaces;
@@ -142,7 +141,7 @@ public class IdentityService : IIdentityService
         return user;
     }
 
-    public async Task<IResult<string>> RegisterAsync(RegisterRequest request, string origin)
+    public async Task<IResult<string>> RegisterAsync(RegisterUserRequest request, string origin)
     {
         var users = await _userManager.Users.ToListAsync();
         var userWithSameUserName = await _userManager.FindByNameAsync(request.UserName);
@@ -248,11 +247,6 @@ public class IdentityService : IIdentityService
 
     public async Task<IResult> ForgotPasswordAsync(ForgotPasswordRequest request, string origin)
     {
-        if (string.IsNullOrEmpty(request.Email))
-        {
-            throw new IdentityException(_localizer["Email is required."], statusCode: HttpStatusCode.BadRequest);
-        }
-
         var user = await _userManager.FindByEmailAsync(request.Email.Normalize());
         if (user is null || !await _userManager.IsEmailConfirmedAsync(user))
         {
