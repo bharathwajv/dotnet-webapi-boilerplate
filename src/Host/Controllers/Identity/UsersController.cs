@@ -8,7 +8,6 @@ namespace DN.WebApi.Host.Controllers.Identity;
 [ApiController]
 [Route("api/[controller]")]
 [ApiVersionNeutral]
-[ApiConventionType(typeof(FSHApiConventions))]
 public class UsersController : ControllerBase
 {
     private readonly IUserService _userService;
@@ -53,5 +52,14 @@ public class UsersController : ControllerBase
     {
         var result = await _userService.AssignRolesAsync(id, request);
         return Ok(result);
+    }
+
+    [HttpPost("toggle-status")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400, Type = typeof(HttpValidationProblemDetails))]
+    [ProducesDefaultResponseType(typeof(ErrorResult))]
+    public async Task<IActionResult> ToggleUserStatusAsync(ToggleUserStatusRequest request)
+    {
+        return Ok(await _userService.ToggleUserStatusAsync(request));
     }
 }

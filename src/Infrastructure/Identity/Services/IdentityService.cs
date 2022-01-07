@@ -122,9 +122,9 @@ public class IdentityService : IIdentityService
                 FirstName = principal.FindFirstValue(ClaimTypes.GivenName),
                 LastName = principal.FindFirstValue(ClaimTypes.Surname),
                 Email = email,
-                NormalizedEmail = email.ToUpper(),
+                NormalizedEmail = email.ToUpperInvariant(),
                 UserName = username,
-                NormalizedUserName = username.ToUpper(),
+                NormalizedUserName = username.ToUpperInvariant(),
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
                 IsActive = true,
@@ -307,9 +307,16 @@ public class IdentityService : IIdentityService
                 return await Result.FailAsync(_localizer["User Not Found."]);
             }
 
+            string currentImage = user.ImageUrl ?? string.Empty;
             if (request.Image != null)
             {
                 user.ImageUrl = await _fileStorage.UploadAsync<ApplicationUser>(request.Image, FileType.Image);
+                if (!string.IsNullOrEmpty(currentImage))
+                {
+                    string root = Directory.GetCurrentDirectory();
+                    string filePath = currentImage.Replace("{server_url}/", string.Empty);
+                    _fileStorage.Remove(Path.Combine(root, filePath));
+                }
             }
 
             user.FirstName = request.FirstName;
