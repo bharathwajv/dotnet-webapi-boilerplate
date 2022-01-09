@@ -7,10 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DN.WebApi.Host.Controllers.Identity;
 
-[ApiController]
-[Route("api/[controller]")]
-[ApiVersionNeutral]
-public class RolesController : ControllerBase
+public class RolesController : VersionNeutralApiController
 {
     private readonly IRoleService _roleService;
 
@@ -36,6 +33,7 @@ public class RolesController : ControllerBase
     }
 
     [HttpGet("{id}/permissions")]
+    [MustHavePermission(PermissionConstants.RoleClaims.View)]
     public async Task<ActionResult<Result<List<PermissionDto>>>> GetPermissionsAsync(string id)
     {
         var roles = await _roleService.GetPermissionsAsync(id);
@@ -43,6 +41,7 @@ public class RolesController : ControllerBase
     }
 
     [HttpPut("{id}/permissions")]
+    [MustHavePermission(PermissionConstants.RoleClaims.Edit)]
     public async Task<ActionResult<Result<string>>> UpdatePermissionsAsync(string id, List<UpdatePermissionsRequest> request)
     {
         var roles = await _roleService.UpdatePermissionsAsync(id, request);
