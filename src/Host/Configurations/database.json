@@ -1,6 +1,6 @@
 {
   "DatabaseSettings": {
     "DBProvider": "mssql",
-    "ConnectionString": "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=fullStackHeroDb;Integrated Security=True;MultipleActiveResultSets=True"
+    "ConnectionString": "Data Source=sql8001.site4now.net;Initial Catalog=db_a859de_fsh;User ID=db_a859de_fsh_admin;Password=pirpep@1"
   }
 }

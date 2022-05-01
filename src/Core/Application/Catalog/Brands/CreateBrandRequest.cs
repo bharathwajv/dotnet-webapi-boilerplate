@@ -4,6 +4,7 @@ public class CreateBrandRequest : IRequest<Guid>
 {
     public string Name { get; set; } = default!;
     public string? Description { get; set; }
+    public int? Quantity { get; set; }
 }
 
 public class CreateBrandRequestValidator : CustomValidator<CreateBrandRequest>
@@ -25,7 +26,7 @@ public class CreateBrandRequestHandler : IRequestHandler<CreateBrandRequest, Gui
 
     public async Task<Guid> Handle(CreateBrandRequest request, CancellationToken cancellationToken)
     {
-        var brand = new Brand(request.Name, request.Description);
+        var brand = new Brand(request.Name, request.Description, request.Quantity);
 
         await _repository.AddAsync(brand, cancellationToken);
 
